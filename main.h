@@ -28,13 +28,15 @@ struct data_node
 };
 
 int main(int argc, char const *argv[]);
+
+
 int parse_cmd(char *cmd, int *cmd_type, unsigned int *data);
 int is_number(char *str);
 
 int add_data(struct list_head *data_list, unsigned int data);
 int del_data(struct list_head *data_list, unsigned int data);
-int show_data(struct list_head *data_list);
-int clear_data(struct list_head *data_list);
+void show_data(struct list_head *data_list);
+void clear_data(struct list_head *data_list);
 
 
 #endif

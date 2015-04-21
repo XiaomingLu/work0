@@ -1,3 +1,4 @@
+
 #include "main.h"
 
 int main(int argc, char const *argv[])
@@ -48,12 +49,10 @@ int main(int argc, char const *argv[])
             }
             break;
             case CMD_SHOW:
-            if (show_data(&data_list) != 0)
-                printf("Error @ Show data.\n");
+            show_data(&data_list);
             break;
             case CMD_STOP:
-            if (clear_data(&data_list) != 0)
-                printf("Error @ Clear data.\n");
+            clear_data(&data_list);
             stop_flag = 1;
             break;
             default:
@@ -63,6 +62,16 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
+/**
+ * parsing the command input from console
+ * @param  cmd      : the input command string that need to be parsed.
+ * @param  cmd_type : output, indicating the command type of the input command string
+ *                    see the defination of CMD_* in main.h
+ * @param  data     : when a command need a operand(such as add/del), data return the 
+ *                    value of the operand. default 0.
+ * @return          : 0 - success
+ *                    1 - parsing failed
+ */
 int parse_cmd(char *cmd, int *cmd_type, unsigned int *data)
 {
     int word_num = 0;
@@ -118,6 +127,12 @@ int parse_cmd(char *cmd, int *cmd_type, unsigned int *data)
     }
 }
 
+/**
+ * determine whether a string is a number string (containing only 0-9)
+ * @param  str : the input string
+ * @return     : 0 - the string isn't a number string
+ *               1 - the string is a number string
+ */
 int is_number(char *str)
 {
     char *p = str;
@@ -128,6 +143,13 @@ int is_number(char *str)
     return 1;
 }
 
+/**
+ * add a data to the specified list
+ * @param  data_list : the head of the specified list
+ * @param  data      : the data needed to be added
+ * @return           :  0 - operated successfully;
+ *                     -1 - error when malloc()
+ */
 int add_data(struct list_head *data_list, unsigned int data)
 {
     struct data_node *node;
@@ -154,6 +176,20 @@ int add_data(struct list_head *data_list, unsigned int data)
     return 0;
 }
 
+/**
+ * delete a data node from the input list
+ * @param  data_list : the input data list.
+ * @param  data      [the data need to be deleted]
+ * @return           [return 0 when operate seccess.]
+ */
+/**
+ * delete a data node from the specified list
+ * @param  data_list : the head of the specified list
+ * @param  data      : the data need to be deleted.
+ * @return           :  0 - operated successfully;
+ *                     -1 - error when malloc()
+ *                     -2 - there is no such data in the list
+ */
 int del_data(struct list_head *data_list, unsigned int data)
 {
     struct data_node *node;
@@ -179,7 +215,11 @@ int del_data(struct list_head *data_list, unsigned int data)
     return 0;
 }
 
-int show_data(struct list_head *data_list)
+/**
+ * show all the data from the specified list
+ * @param  data_list : the specified list.
+ */
+void show_data(struct list_head *data_list)
 {
     struct list_head *p;
     struct data_node *entry;
@@ -187,10 +227,13 @@ int show_data(struct list_head *data_list)
         entry = list_entry(p, struct data_node, list);
         printf("%d\n", entry->data);
     }
-    return 0;
 }
 
-int clear_data(struct list_head *data_list)
+/**
+ * clear the specified list
+ * @param data_list : list input
+ */
+void clear_data(struct list_head *data_list)
 {
     struct list_head *p, *n;
     struct data_node *entry;
@@ -199,5 +242,4 @@ int clear_data(struct list_head *data_list)
         list_del(&entry->list);
         free(entry);
     }
-    return 0;
 }
