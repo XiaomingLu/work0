@@ -67,7 +67,7 @@ int main(int argc, char const *argv[])
  * @param  cmd      : the input command string that need to be parsed.
  * @param  cmd_type : output, indicating the command type of the input command string
  *                    see the defination of CMD_* in main.h
- * @param  data     : when a command need a operand(such as add/del), data return the 
+ * @param  data     : when a command need a operand(such as add/del), data return the
  *                    value of the operand. default 0.
  * @return          : 0 - success
  *                    1 - parsing failed
@@ -153,11 +153,10 @@ int is_number(char *str)
 int add_data(struct list_head *data_list, unsigned int data)
 {
     struct data_node *node;
-    if ((node = (struct data_node *)malloc(sizeof(struct data_node))) == NULL)
-        return -1; 
-    node->data = data;
-
     if (list_empty(data_list)) {
+        if ((node = (struct data_node *)malloc(sizeof(struct data_node))) == NULL)
+            return -1;
+        node->data = data;
         list_add(&node->list, data_list);
     } else {
         struct list_head *p;
@@ -167,10 +166,16 @@ int add_data(struct list_head *data_list, unsigned int data)
             if (entry->data == data)
                 return 0;
             if (entry->data > data) {
+                if ((node = (struct data_node *)malloc(sizeof(struct data_node))) == NULL)
+                    return -1;
+                node->data = data;
                 list_add_tail(&node->list, p);
                 return 0;
             }
         }
+        if ((node = (struct data_node *)malloc(sizeof(struct data_node))) == NULL)
+            return -1;
+        node->data = data;
         list_add_tail(&node->list, data_list);
     }
     return 0;
@@ -194,7 +199,7 @@ int del_data(struct list_head *data_list, unsigned int data)
 {
     struct data_node *node;
     if ((node = (struct data_node *)malloc(sizeof(struct data_node))) == NULL)
-        return -1; 
+        return -1;
     node->data = data;
 
     if (list_empty(data_list)) {
